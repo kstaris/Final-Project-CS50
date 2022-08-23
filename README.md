@@ -1,5 +1,5 @@
 # True car price calculator
-#### Video Demo:  <URL HERE>
+#### Video Demo:  https://youtu.be/UJQ8USHiNac
 #### Description:
   This is a calculator that gives you a simple way to calculate the true cost of car ownership. Usually, we think of just the initial price (or leasing) and fuel price when we think about it. But there are a few more expenses to consider. It is especially interesting if you are considering buying a new or used car and are wondering if it makes sense for you to switch to an electric vehicle. After looking online, I realised that there are calculators that give you the opportunity to calculate the true car ownership price, but they miss some of the parameters I find important or do not allow to save and compare cars.
 ##### Index:

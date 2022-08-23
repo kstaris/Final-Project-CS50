@@ -4,7 +4,7 @@ from pickle import TRUE
 from flask import Flask, redirect, render_template, request, session,jsonify
 from flask_session import Session
 from cs50 import SQL;
-from helpers import apology, login_required, lookup
+from helpers import apology, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 db = SQL("sqlite:///cars.db")
 
@@ -95,6 +95,7 @@ def index():
 def delete():
     if request.method=="POST":
         #Delete the car
+        print(request.form.get('delete'), file=sys.stdout)
         db.execute("DELETE FROM saved_cars WHERE id=?", request.form.get("delete"))
         carsT = db.execute("SELECT * FROM saved_cars WHERE userId = ?", session["user_id"])
         return render_template("saved.html", carsT=carsT)

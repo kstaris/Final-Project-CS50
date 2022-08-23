@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-<form action="/saved" method="post" >
+<form action="/saved" method="post" id="compareForm"></form>
     <table class="table frame">
         <thead>
             <th>Manufacturer</th>
@@ -20,22 +20,21 @@
                 <td>{{row['model']}}</td>
                 <td>{{row['mRunCost']}}</td>
                 <td>
-                    <input type="checkbox" name="car_checkbox" value="{{row['id']}}">
+                    <input type="checkbox" name="car_checkbox" form="compareForm" value="{{row['id']}}">
                 </td>
                 <td>
-                    <input type="hidden" name="edit" value="{{row['id']}}">
-                    <button type="submit" formaction="/edit" class="btn btn-secondary">Edit</button>
+                    <form id="editForm" action="/edit" method="post"></form>
+                    <button type ="submit" value="{{row['id']}}" name="edit" form="editForm" class="btn btn-secondary">Edit</button>
                 </td>
                 <td>
-                    <input type="hidden" name="delete" value="{{row['id']}}">
-                    <button type="submit" formaction="delete" class="btn btn-danger">Delete</button>
+                    <form id="deleteForm" action="/delete" method="post"></form>
+                    <button type ="submit" value="{{row['id']}}" name="delete" form="deleteForm" class="btn btn-danger">Delete</button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <button type="submit" class="btn btn-primary">Compare</button>
-</form>
+    <button type="submit" class="btn btn-primary" form="compareForm">Compare</button>
 {% if max3 %}
 <div class="alert alert-danger" role="alert">
     {{max3}}

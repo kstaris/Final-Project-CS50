@@ -116,7 +116,7 @@
             <label for="fPrice" class="col-form-label">Fuel price:</label>
           </div>
           <div>
-            <input type="number" step="0.01" class="calc form-control" id="fPrice" name="fPrice" placeholder="Price">
+            <input type="number" step="0.01" class="calc form-control" id="fPrice" name="fPrice" placeholder="Price" value="{{eTable[0]['fPrice']}}">
           </div>
         </div>
       </div>
@@ -139,13 +139,13 @@
         <label for="tax" class="col-form-label">Tax</label>
       </div>
       <div class="col-auto">
-        <input type="number" step="0.01" class="calc form-control" id="tax" name="tax" placeholder="Tax">
+        <input type="number" step="0.01" class="calc form-control" id="tax" name="tax" placeholder="Tax" value="{{eTable[0]['tax']}}">
       </div>
       <div>
         <label for="insurance" class="col-form-label">Yearly insurance price:</label>
       </div>
       <div class="col-auto">
-        <input type="number" step="0.01" class="calc form-control" id="insurance" name="insurance" placeholder="Insurance">
+        <input type="number" step="0.01" class="calc form-control" id="insurance" name="insurance" placeholder="Insurance"  value="{{eTable[0]['insurance']}}">
       </div>
     </div>
     <!--Information that depends on the driver-->

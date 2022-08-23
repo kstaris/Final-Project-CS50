@@ -10,7 +10,7 @@
   This file contains 2 functions that are takend from CS50 finance problemset - apology() and login_required(). Since they already had all the necessary funcionality I did not see a reason to develop them from scratch.
 ##### cars.db
   A sqlite3 database that contains 3 tables. One for the cars that users have saved, one for usernames and passwords and one for the available car manufacturers, models and years.
-##### **Templates**
+##### *Templates*
 ##### Index:
   On the first page I have made a form that you have to fill to find out the price. The car manufacturer, models and years are provided from a database. These are necessary to fill only if you wish to save your query. If you don't know what to input for some of these parameters, you can opt to have it filled with average values and then adjust them to your preferences. The monthly price changes dynamically on each value change so it is easier for you to see what matters more. If you have logged in, you can also save your results in database and go to "Saved searches".
   To generate options for model and year page uses a XMLHttpRequest method. I chose to use this insetead of form just to explore a different method.

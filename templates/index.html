@@ -1,0 +1,319 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    index
+{% endblock %}
+
+{% block main %}
+<h1>Fill in the form to find out the monthly price of car ownership</h1>
+<!-- Form for calculating car monthly expenses-->
+
+<form id="form1"   action="/" method="post">
+    <!--Option to input the car data for automatic data population-->
+  <div class="frame custom1">
+    <label for="autofill">Would you like to have some of the fields filled automatically with average values?</label>
+    <input type="checkbox" class="calc" id="autofill" unchecked>
+  </div>
+  <!--General information about the car-->
+  <div class="custom2">
+    <div class="frame">
+      <div class="col-auto">
+        <label for="manufacturer" class="col-form-label">Manufacturer:</label>
+      </div>
+      <div class="col-auto">
+        <select name="manufacturer" id="manufacturer" class="calc form-control">
+          <!--Genereate options for all possible manufacurers (US database)-->
+          <option value="" >Not selected</option>
+          {% for make in allManuf %}
+          <option value="{{make['Make']}}" >{{make['Make']}}</option>
+          {% endfor %}
+        </select> 
+      </div>
+      <div class="col-auto">
+        <label class="col-form-label">Model:</label>
+      </div>
+      <div class="col-auto">
+        <select name="model" id="model" class="calc form-control">
+          <option value="" >Not selected</option>
+        </select>
+        <!--Script to generate a post request and get car models for selected manufacuter
+        (it is possible to do it with Form, decided but explored this option)-->
+        <script>
+          document.querySelector('#manufacturer').addEventListener('change',function(){
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/manuf");
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4) {
+                allModels = JSON.parse(xhr.responseText);
+                modelSelect = document.getElementById('model')
+                let i,L = modelSelect.options.length - 1;
+                for (i=L; i >= 0; i--){
+                  modelSelect.remove(i);
+                }
+                for (let i = 0; i < allModels.length; i++){
+                  let model = document.createElement('option');
+                  model.value = allModels[i]['Model'];
+                  model.innerHTML = allModels[i]['Model'];
+                  modelSelect.appendChild(model);
+                };
+              }};
+            let select = document.getElementById('manufacturer');
+            let value = select.options[select.selectedIndex].value;
+            let data = value;
+            xhr.send(data);
+          })
+        </script>
+      </div>
+      <div class="col-auto">
+        <label class="col-form-label">Registration year:</label>
+      </div>
+      <div class="col-auto">
+        <select name="reg_year" id="reg_year" class="calc form-control">
+          <option value="" >Not selected</option>
+        </select>
+        <!--Script to generate all available manufacturing years for selected car model-->
+        <script>
+          document.querySelector('#model').addEventListener('change',function(){
+            console.log ("inn")
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/model");
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4) {
+                allYears = JSON.parse(xhr.responseText);
+                yearSelect = document.getElementById('reg_year')
+                let i,L = yearSelect.options.length - 1;
+                for (i=L; i >= 0; i--){
+                  yearSelect.remove(i);
+                }
+                for (let i = 0; i < allYears.length; i++){
+                  let year = document.createElement('option');
+                  year.value = allYears[i]['Year'];
+                  year.innerHTML = allYears[i]['Year'];
+                  yearSelect.appendChild(year);
+                };
+              }};
+            let select = document.getElementById('model');
+            let value = select.options[select.selectedIndex].value;
+            let data = value;
+            console.log(data);
+            xhr.send(data);
+            
+          })
+        </script>
+      </div>
+      <div class="full col-auto">
+        <div class="half">
+          <div>
+            <label for="fuel" class="col-form-label">Fuel type:</label>
+          </div>
+          <div>
+            <select id="fuel" name="fType" class="calc form-control">
+              <option value="Diesel">Diesel</option>
+              <option value="Petrol">Petrol</option>
+              <option value="Electricity">Electricity</option>
+            </select>
+          </div>
+        </div>
+        <div class="half">
+          <div>
+            <label for="fPrice" class="col-form-label">Fuel price:</label>
+          </div>
+          <div>
+            <input type="number" step="0.01" class="calc form-control" id="fPrice" name="fPrice" placeholder="Price">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Technical information about the car-->
+    <div class="frame">
+      <div class="col-auto">
+        <label for="fConsumption" class="col-form-label">Fuel consuption l(kW)/100km:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="fConsumption" name="fConsumption" placeholder="Fuel consumption">
+      </div>
+      <div>
+        <label for="km/y" class="col-form-label">Km driven per year:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" class="calc form-control" id="kmPy" name="kmPy" placeholder="Km per year">
+      </div>
+      <div>
+        <label for="tax" class="col-form-label">Tax</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="tax" name="tax" placeholder="Tax">
+      </div>
+      <div>
+        <label for="insurance" class="col-form-label">Yearly insurance price:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="insurance" name="insurance" placeholder="Insurance">
+      </div>
+    </div>
+    <!--Information that depends on the driver-->
+    <div class="frame">
+      <div>
+        <label for="oil" class="col-form-label">Oil and filters yearly:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="oil" name="oil" placeholder="Oil and filters">
+      </div>
+      <div>
+        <label for="service" class="col-form-label">Service excluding oil and filters:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="service" name="service" placeholder="Service">
+      </div>
+      <div>
+        <label for="tyres" class="col-form-label">Yearly tire price:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="tyres" name="tyres" placeholder="Tyres">
+      </div>
+      <div>
+        <label for="parking" class="col-form-label">Monthly parking and other fees:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="parking" name="parking" placeholder="Parking and other fees">
+      </div>
+    </div>
+    <!--Price of the car itself-->
+    <div class="frame">
+      <div>
+        <label for="monthlyP"  class="col-form-label">Monthly leasing or credit:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="monthlyP" name="mPayment" placeholder="Monthly payment">
+      </div>
+      <div>
+        <label for="initialP" class="col-form-label">Initial car price (or first payment):</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="initialP" name="initPayment" placeholder="Initial payment">
+      </div>
+      <div>
+        <label for="sellingP" class="col-form-label">Expected selling price:</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" step="0.01" class="calc form-control" id="sellingP" name="expSellingPrice" placeholder="Selling price">
+      </div>
+      <div>
+        <!--For how long are you expecting to use the car-->
+        <label for="years" class="col-form-label">Years expected to keep the car?</label>
+      </div>
+      <div class="col-auto">
+        <input type="number" class="calc form-control" id="years" name="yearsToHave" placeholder="Years">
+      </div>
+    </div>
+  </div>
+  <div class="frame">
+    <label for="mRunCost" class="col-form-label">Monthly running cost:</label>
+    <input class="form-control-plaintext" id="parent" name="mRunCost" value="0">
+    {% if session["user_id"] %}
+    <button type="submit" class="btn btn-primary">Save</button>
+    {% endif %}
+  </div>
+  <!--Calculate all values in javascript. Post only on save-->
+  <script>
+    //Define all values
+    let fConsumption = document.getElementById("fConsumption");
+    let tax = document.getElementById("tax");
+    let fuel = document.getElementById("fType");
+    let kmy = document.getElementById("kmPy");
+    let insurance = document.getElementById("insurance");
+    let oil = document.getElementById("oil");
+    let service = document.getElementById("service");
+    let tyres = document.getElementById("tyres");
+    let parking = document.getElementById("parking");
+    let monthlyP = document.getElementById("monthlyP");
+    let initialP = document.getElementById("initialP");
+    let sellingP = document.getElementById("sellingP");
+    let years = document.getElementById("years");
+    let fPrice = document.getElementById("fPrice");
+    
+    //Auto filling the values or seting the values to none
+    document.querySelector('#autofill').addEventListener('click',function(){
+      let autoOn = document.getElementById("autofill").checked;
+      if (autoOn==true){
+        console.log ("in autofil", autoOn)
+        fConsumptionVal = 6.7;
+        taxVal = 100;
+        kmyVal = 10000;
+        insuranceVal = 60
+        oilVal = 100;
+        serviceVal = 250;
+        tyresVal = 250;
+        parkingVal = 50;
+        fPriceVal = 1.9;
+        monthlyPVal = 200;
+        initialPVal = 5000;
+        sellingPVal = 2000;
+        yearsVal = 5;
+        fConsumption.value=fConsumptionVal;
+        tax.value=taxVal;
+        kmPy.value=kmyVal;
+        insurance.value=insuranceVal;
+        oil.value=oilVal;
+        service.value=serviceVal;
+        tyres.value=tyresVal;
+        parking.value=parkingVal;
+        fPrice.value=fPriceVal;
+        monthlyP.value=monthlyPVal;
+        initialP.value=initialPVal;
+        sellingP.value=sellingPVal;
+        years.value=yearsVal;
+      }
+      else {
+        fConsumption.value="";
+        tax.value="";
+        kmPy.value="";
+        insurance.value="";
+        oil.value="";
+        service.value="";
+        tyres.value="";
+        parking.value="";
+        fPrice.value="";
+        monthlyP.value="";
+        initialP.value="";
+        sellingP.value="";
+        years.value="";
+      }
+    })
+   document.querySelectorAll(".calc").forEach(item =>{
+    item.addEventListener("input", event=>{
+      fConsumptionVal = fConsumption.value;
+      taxVal = tax.value;
+      kmPyVal = kmPy.value;
+      insuranceVal = insurance.value;
+      oilVal = oil.value;
+      serviceVal = service.value;
+      tyresVal = tyres.value;
+      parkingVal = parking.value;
+      fPriceVal = fPrice.value;
+      monthlyPVal = monthlyP.value;
+      initialPVal = initialP.value;
+      sellingPVal = sellingP.value;
+      yearsVal = years.value;
+      //Calculating the monthly price of driving
+      yFuel = fConsumptionVal * kmPyVal / 100 * fPriceVal;
+      yRunCost = yFuel + +taxVal + +insuranceVal + +oilVal + +serviceVal + +tyresVal;
+      yCost = yRunCost + +monthlyPVal * 12 + (+initialPVal - +sellingPVal) / +yearsVal;
+      //Writing the monthly price to html
+      if (Infinity>yCost>0){
+        let html = Math.round(yCost/12);
+        document.querySelector("#parent").value= html;
+      }
+      else{
+        document.querySelector("#parent").value= "0";
+      }
+    })
+   }) 
+  </script>
+</form>
+{% endblock %}

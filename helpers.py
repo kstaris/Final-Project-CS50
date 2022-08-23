@@ -1,8 +1,3 @@
-import os
-import urllib.parse
-import requests
-import sys
-
 from flask import redirect, render_template, request, session
 from functools import wraps
 
@@ -35,12 +30,3 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def lookup():
-    TRIVIA_URL = 'https://api.api-ninjas.com/v1/cars?make=ford'
-    # Make API Call - make sure to use a valid API key.
-    API_KEY = os.environ.get("API_KEY")
-    resp = requests.get(TRIVIA_URL, headers={'X-Api-Key': API_KEY}).json()
-    # Get first trivia result since the API returns a list of results.
-    trivia = resp
-    
-    return trivia

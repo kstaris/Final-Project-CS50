@@ -1,4 +1,3 @@
-import os
 import sys
 from pickle import TRUE
 from flask import Flask, redirect, render_template, request, session,jsonify
